@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SortLab — Bubble Sort & Selection Sort</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2e;--text:#eaf2ff;--muted:#9fb2c9;--accent:#5eead4;--accent2:#60a5fa;--border:#1f3a59}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#07111f,#0b1730);color:var(--text)}
+nav{position:sticky;top:0;z-index:10;background:rgba(7,17,31,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 5%}
+nav .brand{font-weight:800;color:var(--accent)}nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:14px}nav a:hover{color:white}
+.hero{padding:72px 6% 50px;display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center}.badge{display:inline-block;padding:7px 12px;border:1px solid #245477;border-radius:999px;color:var(--accent);font-size:13px;background:#0a1a2b}
+h1{font-size:clamp(38px,6vw,70px);line-height:1.02;margin:18px 0}h2{font-size:30px;margin-top:0}.lead{color:var(--muted);font-size:18px;line-height:1.7;max-width:760px}
+.btn{display:inline-block;padding:12px 17px;border-radius:10px;background:var(--accent);color:#06211d;text-decoration:none;font-weight:800;margin:10px 8px 0 0}
+.hero-card,.card{background:linear-gradient(180deg,var(--panel),#09172a);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 15px 40px rgba(0,0,0,.22)}
+.hero-card .big{font-size:72px;font-weight:900;color:var(--accent2);text-align:center}.hero-card p,.card p,li{color:var(--muted);line-height:1.7}
+section{padding:55px 6%}.section-head{max-width:780px;margin-bottom:28px}.grid,.grid3{display:grid;gap:20px}.grid{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}.controls input{flex:1;min-width:200px;background:#071525;color:white;border:1px solid var(--border);padding:12px;border-radius:9px}
+button{border:0;border-radius:9px;padding:11px 15px;font-weight:750;cursor:pointer;background:#183957;color:white}button.primary{background:var(--accent);color:#06211d}button.alt{background:var(--accent2);color:#07111f}
+.array{display:flex;align-items:end;gap:8px;height:230px;padding:18px;background:#071525;border:1px solid var(--border);border-radius:12px;overflow-x:auto}.bar{min-width:38px;background:linear-gradient(180deg,var(--accent2),#2563eb);border-radius:6px 6px 2px 2px;position:relative;transition:.25s}.bar span{position:absolute;bottom:-25px;width:100%;text-align:center;font-size:12px;color:var(--muted)}.bar.active{background:linear-gradient(180deg,#fbbf24,#f97316)}.bar.sorted{background:linear-gradient(180deg,#5eead4,#14b8a6)}
+.code{background:#050b14;border:1px solid #17304c;border-radius:12px;padding:18px;overflow:auto;color:#dbeafe;font-size:13px;line-height:1.6;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:12px;overflow:hidden}th,td{padding:14px;border-bottom:1px solid var(--border);text-align:left}th{color:var(--accent)}td{color:var(--muted)}
+footer{padding:35px 6%;border-top:1px solid var(--border);color:var(--muted);text-align:center}@media(max-width:850px){.hero,.grid,.grid3{grid-template-columns:1fr}nav a{margin-left:8px;font-size:12px}.hero{padding-top:48px}}
+</style></head><body>
+<nav><span class="brand">SORTLAB</span><a href="#home">Home</a><a href="#simulator">Simulator</a><a href="#algorithms">Algorithms</a><a href="#code">Program</a><a href="#compare">Comparison</a><a href="#report">Report</a></nav>
+<header class="hero" id="home"><div><span class="badge">Data Structures & Algorithm Mini Project</span><h1>Bubble Sort<br>& Selection Sort</h1><p class="lead">Interactive learning website for visualizing and comparing Bubble Sort and Selection Sort with step-by-step execution, complexity analysis and a complete C program.</p><a class="btn" href="#simulator">Open Simulator</a><a class="btn" style="background:#183957;color:white" href="#report">View Project</a></div><div class="hero-card"><div class="big">O(n²)</div><p>Average & worst-case complexity of both basic algorithms</p><hr style="border-color:#1f3a59"><p><b>Bubble Sort</b> → adjacent comparisons & swaps</p><p><b>Selection Sort</b> → minimum selection & swap</p></div></header>
+<section id="simulator"><div class="section-head"><h2>Interactive Sorting Simulator</h2><p>Enter numbers separated by commas. Choose an algorithm, then move through the sorting process.</p></div><div class="card"><div class="controls"><input id="input" value="64,25,12,22,11,90,34"><button class="primary" onclick="loadArray()">Load Array</button><button onclick="choose('bubble')">Bubble Sort</button><button class="alt" onclick="choose('selection')">Selection Sort</button><button onclick="step()">Next Step</button><button onclick="resetSim()">Reset</button></div><div id="status" style="color:var(--accent);font-weight:700;margin:8px 0">Choose an algorithm to begin.</div><div id="bars" class="array"></div></div></section>
+<section id="algorithms"><div class="section-head"><h2>How the Algorithms Work</h2><p>Both methods sort the same data, but they make decisions differently.</p></div><div class="grid"><div class="card"><h3>Bubble Sort</h3><p>Bubble Sort compares adjacent elements. If they are in the wrong order, they are swapped. After each pass, the largest unsorted value moves to the end.</p><ol><li>Compare adjacent elements.</li><li>Swap when left &gt; right.</li><li>Repeat over the unsorted portion.</li><li>The sorted suffix grows after every pass.</li></ol></div><div class="card"><h3>Selection Sort</h3><p>Selection Sort searches the unsorted portion for the smallest value and places it at the beginning of that portion.</p><ol><li>Assume the first unsorted element is minimum.</li><li>Scan the remaining elements.</li><li>Remember the smallest value.</li><li>Swap it into the current position.</li></ol></div></div></section>
+<section id="code"><div class="section-head"><h2>C Program</h2><p>Complete program used for the mini project.</p></div><div class="card"><pre class="code">#include &lt;stdio.h&gt;
+
+void bubbleSort(int arr[], int n) {
+    int i, j, temp;
+    for (i = 0; i &lt; n - 1; i++)
+        for (j = 0; j &lt; n - i - 1; j++)
+            if (arr[j] &gt; arr[j + 1]) {
+                temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp;
+            }
+}
+
+void selectionSort(int arr[], int n) {
+    int i, j, min, temp;
+    for (i = 0; i &lt; n - 1; i++) {
+        min = i;
+        for (j = i + 1; j &lt; n; j++)
+            if (arr[j] &lt; arr[min]) min = j;
+        temp = arr[i]; arr[i] = arr[min]; arr[min] = temp;
+    }
+}
+
+void display(int arr[], int n) {
+    for (int i = 0; i &lt; n; i++) printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int arr1[] = {64, 25, 12, 22, 11};
+    int arr2[] = {64, 25, 12, 22, 11};
+    int n = 5;
+    printf("Original Array: "); display(arr1, n);
+    bubbleSort(arr1, n); printf("Bubble Sort:    "); display(arr1, n);
+    selectionSort(arr2, n); printf("Selection Sort: "); display(arr2, n);
+    return 0;
+}</pre></div></section>
+<section id="compare"><div class="section-head"><h2>Algorithm Comparison</h2><p>A quick comparison for viva and report preparation.</p></div><table><tr><th>Feature</th><th>Bubble Sort</th><th>Selection Sort</th></tr><tr><td>Basic idea</td><td>Adjacent comparison and swapping</td><td>Select minimum and swap</td></tr><tr><td>Best case</td><td>O(n)*</td><td>O(n²)</td></tr><tr><td>Average case</td><td>O(n²)</td><td>O(n²)</td></tr><tr><td>Worst case</td><td>O(n²)</td><td>O(n²)</td></tr><tr><td>Extra space</td><td>O(1)</td><td>O(1)</td></tr><tr><td>Stable</td><td>Yes</td><td>No</td></tr><tr><td>Swaps</td><td>Can be many</td><td>At most n−1</td></tr></table><p style="color:var(--muted);font-size:13px">*Optimized Bubble Sort can achieve O(n) on an already sorted array.</p></section>
+<section id="report"><div class="section-head"><h2>Project Report Summary</h2><p>Ready-to-use summary for the laboratory submission.</p></div><div class="grid3"><div class="card"><h3>Objective</h3><p>Implement Bubble Sort and Selection Sort, visualize their working, compare complexity and verify results using the same input.</p></div><div class="card"><h3>Team</h3><p>Pranesh Manickam V – 920425243070<br>Praveen M – 920425243071<br>Bahirathan Jeyakumar – 920425243012</p></div><div class="card"><h3>Conclusion</h3><p>Both algorithms correctly sort the data. Selection Sort generally performs fewer swaps, while Bubble Sort clearly demonstrates repeated adjacent comparisons.</p></div></div></section>
+<footer>AI2203 Data Structures and Algorithm Laboratory Mini Project · Bubble Sort & Selection Sort</footer>
+<script>
+let arr=[],algo="",state={},finished=false;
+function render(active=[]){const el=document.getElementById("bars");el.innerHTML="";const max=Math.max(...arr,1);arr.forEach((v,i)=>{const b=document.createElement("div");b.className="bar "+(active.includes(i)?"active ":"")+(finished?"sorted":"");b.style.height=(35+v/max*150)+"px";b.innerHTML="<span>"+v+"</span>";el.appendChild(b)})}
+function loadArray(){arr=document.getElementById("input").value.split(",").map(x=>Number(x.trim())).filter(Number.isFinite);finished=false;state={};render();document.getElementById("status").textContent="Array loaded. Choose Bubble Sort or Selection Sort."}
+function choose(a){if(!arr.length)loadArray();algo=a;finished=false;state={i:0,j:0,min:0};document.getElementById("status").textContent=(a==="bubble"?"Bubble Sort":"Selection Sort")+" selected. Press Next Step.";render()}
+function step(){if(!algo){document.getElementById("status").textContent="Choose an algorithm first.";return}if(finished)return;if(algo==="bubble")bubbleStep();else selectionStep()}
+function bubbleStep(){let i=state.i,j=state.j;if(i>=arr.length-1){finished=true;render();document.getElementById("status").textContent="Bubble Sort complete.";return}if(j>=arr.length-i-1){state.i++;state.j=0;document.getElementById("status").textContent="Pass "+state.i+" complete — largest remaining value fixed.";render();return}let swapped=false;if(arr[j]>arr[j+1]){[arr[j],arr[j+1]]=[arr[j+1],arr[j]];swapped=true}state.j++;render([j,j+1]);document.getElementById("status").textContent=`Pass ${i+1}: compared positions ${j+1} and ${j+2}${swapped?" — swapped.":" — no swap."}`}
+function selectionStep(){let i=state.i;if(i>=arr.length-1){finished=true;render();document.getElementById("status").textContent="Selection Sort complete.";return}let j=state.j;if(j===0){state.min=i;state.j=i+1;render([i]);document.getElementById("status").textContent=`Position ${i+1}: current minimum is ${arr[i]}.`;return}if(j<arr.length){if(arr[j]<arr[state.min])state.min=j;state.j++;render([state.min,j]);document.getElementById("status").textContent=`Scanning: current minimum = ${arr[state.min]}.`;return}[arr[i],arr[state.min]]=[arr[state.min],arr[i]];document.getElementById("status").textContent=`Pass ${i+1}: placed ${arr[i]} at position ${i+1}.`;state.i++;state.j=0;render([i])}
+function resetSim(){arr=[];algo="";state={};finished=false;document.getElementById("bars").innerHTML="";document.getElementById("status").textContent="Choose an algorithm to begin."}
+loadArray();
+</script></body></html>
